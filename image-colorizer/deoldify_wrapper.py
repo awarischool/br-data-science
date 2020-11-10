@@ -1,49 +1,51 @@
-#hide
 import os
 from os import path
 import warnings
 try:
-    print("Trying to import DeOldify (if installed)")
-    from deoldify.visualize import get_image_colorizer, show_image_in_notebook
+    print("  Importing Libraries")
     from deoldify import device
     from deoldify.device_id import DeviceId
-    #choices:  CPU, GPU0...GPU7
     device.set(device=DeviceId.GPU0)
-    print("  DeOldify has been imported!")
-
     import torch
-    import fastai
-    torch.backends.cudnn.benchmark = True
     if not torch.cuda.is_available():
         warnings.warn('WARNING: GPU not available. Activate it on Colab at Edit > Notebook Settings')
+
+    print("  Installing Colab requirements...")
+    os.system("pip install -r colab_requirements.txt")
+
+    print("  Importing DeOldify Visualize module and FastAI")
+    import fastai
+    from deoldify.visualize import *
+    torch.backends.cudnn.benchmark = True
+
 except Exception as e:
     print(e)
     print("DeOldify not found, installing..")
     if not path.exists('DeOldify'):
         print("  Cloning DeOldify Repository...")
-        os.system("git clone https://github.com/jantic/DeOldify.git DeOldify ")
+        os.system("git clone https://github.com/jantic/DeOldify.git DeOldify")
         print("  Opening DeOldify Folder")
         os.chdir("DeOldify")
+
+    print("  Importing Libraries")
+    from deoldify import device
+    from deoldify.device_id import DeviceId
+    device.set(device=DeviceId.GPU0)
+    import torch
+    if not torch.cuda.is_available():
+        warnings.warn('WARNING: GPU not available. Activate it on Colab at Edit > Notebook Settings')
+
     print("  Installing Colab requirements...")
     os.system("pip install -r colab_requirements.txt")
 
-    print("  Importing DeOldify")
-    from deoldify.visualize import get_image_colorizer, show_image_in_notebook
-    from deoldify import device
-    from deoldify.device_id import DeviceId
-    #choices:  CPU, GPU0...GPU7
-    device.set(device=DeviceId.GPU0)
-
-    import torch
+    print("  Importing DeOldify Visualize module and FastAI")
     import fastai
+    from deoldify.visualize import *
     torch.backends.cudnn.benchmark = True
 
-    if not torch.cuda.is_available():
-        warnings.warn('WARNING: GPU not available. Activate it on Colab at Edit > Notebook Settings')
-    
     print("  Downloading Colorizer Model")
     os.system("mkdir 'models'")
-    os.system("wget https://www.dropbox.com/s/mwjep3vyqk5mkjc/ColorizeStable_gen.pth?dl=0 -O ./models/ColorizeStable_gen.pth")
+    os.system("wget https://www.dropbox.com/s/usf7uifrctqw9rl/ColorizeStable_gen.pth?dl=0 -O ./models/ColorizeStable_gen.pth")
 
 class DeOldify:
     def __init__(self):
